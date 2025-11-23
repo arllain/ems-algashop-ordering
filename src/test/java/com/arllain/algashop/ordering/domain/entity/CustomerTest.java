@@ -1,10 +1,9 @@
 package com.arllain.algashop.ordering.domain.entity;
 
+import com.arllain.algashop.ordering.domain.utility.IdGenerator;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 class CustomerTest {
 
@@ -12,7 +11,7 @@ class CustomerTest {
     public void testingCustomer() {
 
         Customer customer = new Customer(
-                UUID.randomUUID(),
+                IdGenerator.generateTimeBasedUUID(),
                 "Arllain Silva",
                 LocalDate.of(1976,12,18),
                 "email@email.com",
