@@ -23,6 +23,5 @@ class CustomerTest {
         );
 
         customer.addLoyaltyPoints(10);
-        customer.changeEmail();
     }
 }
