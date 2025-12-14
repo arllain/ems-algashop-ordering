@@ -22,7 +22,16 @@ class CustomerTest {
                     new Phone("478-256-2504"),
                     new Document("255-08-2504"),
                     false,
-                    OffsetDateTime.now()
+                    OffsetDateTime.now(),
+                    Address.builder()
+                            .street("Bourbon String")
+                            .number("1134")
+                            .neighborhood("North Ville")
+                            .city("York")
+                            .state("South California")
+                            .zipCode(new ZipCode("12345"))
+                            .complement("Apt. 114")
+                            .build()
             );
         });
     }
@@ -40,7 +49,16 @@ class CustomerTest {
                     new Phone("478-256-2504"),
                     new Document(""),
                     false,
-                    OffsetDateTime.now()
+                    OffsetDateTime.now(),
+                    Address.builder()
+                            .street("Bourbon String")
+                            .number("1134")
+                            .neighborhood("North Ville")
+                            .city("York")
+                            .state("South California")
+                            .zipCode(new ZipCode("12345"))
+                            .complement("Apt. 114")
+                            .build()
             );
         });
     }
@@ -56,8 +74,17 @@ class CustomerTest {
                 new Phone("478-256-2504"),
                 new Document("255-08-2504"),
                 false,
-                OffsetDateTime.now()
-            );
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon String")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
+        );
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
             customer.changeEmail(new Email("invalid"));
@@ -74,7 +101,16 @@ class CustomerTest {
                 new Phone("478-256-2504"),
                 new Document("255-08-2504"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon String")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
         );
         customer.archive();
 
@@ -84,7 +120,16 @@ class CustomerTest {
                 c -> Assertions.assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
                 c -> Assertions.assertThat(c.document()).isEqualTo(new Document("000-00-0000")),
                 c -> Assertions.assertThat(c.birthDate()).isNull(),
-                c-> Assertions.assertThat(c.isPromotionNotificationsAllowed()).isFalse()
+                c-> Assertions.assertThat(c.isPromotionNotificationsAllowed()).isFalse(),
+                c-> Assertions.assertThat(c.address()).isEqualTo(Address.builder()
+                        .street("Bourbon String")
+                        .number("Anonymous")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement(null)
+                        .build())
         );
     }
 
@@ -101,7 +146,16 @@ class CustomerTest {
                 true,
                 OffsetDateTime.now(),
                 OffsetDateTime.now(),
-                new LoyaltyPoints(10)
+                new LoyaltyPoints(10),
+                Address.builder()
+                        .street("Bourbon String")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
         );
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
@@ -131,7 +185,16 @@ class CustomerTest {
                 new Phone("478-256-2504"),
                 new Document("255-08-2504"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon String")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
         );
         customer.addLoyaltyPoints(new LoyaltyPoints(10));
         customer.addLoyaltyPoints(new LoyaltyPoints(20));
@@ -149,7 +212,16 @@ class CustomerTest {
                 new Phone("478-256-2504"),
                 new Document("255-08-2504"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon String")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
         );
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltyPoints(0)));
