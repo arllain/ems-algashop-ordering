@@ -7,7 +7,7 @@ import java.util.Objects;
 public record Money(BigDecimal value) implements Comparable<Money>{
 
     private static final RoundingMode roundingMode = RoundingMode.HALF_EVEN;
-    private static final Money ZERO = new Money(BigDecimal.ZERO);
+    public static final Money ZERO = new Money(BigDecimal.ZERO);
 
     public Money(String value) {
         this(new BigDecimal(value));

@@ -1,5 +1,6 @@
 package com.arllain.algashop.ordering.domain.valueobject.id;
 
+import com.arllain.algashop.ordering.domain.utility.IdGenerator;
 import io.hypersistence.tsid.TSID;
 
 import java.util.Objects;
@@ -10,9 +11,14 @@ public record OrderId(TSID value) {
         Objects.requireNonNull(value);
     }
 
+    public OrderId() {
+        this(IdGenerator.generateTSID());
+    }
+
     public OrderId(Long value) {
         this(TSID.from(value));
     }
+
     public OrderId(String value) {
         this(TSID.from(value));
     }

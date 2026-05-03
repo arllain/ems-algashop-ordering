@@ -5,9 +5,11 @@ import com.arllain.algashop.ordering.domain.valueobject.Money;
 import com.arllain.algashop.ordering.domain.valueobject.Quantity;
 import com.arllain.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.arllain.algashop.ordering.domain.valueobject.id.OrderId;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,6 +29,7 @@ public class Order {
     private LocalDate expectedDeliveryData;
     private Set<OrderItem> items;
 
+    @Builder(builderClassName = "ExistingOrderBuielder", builderMethodName = "existing")
     public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
                  OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingInfo billing,
                  PaymentMethod paymentMethod, Money shippingCost, LocalDate expectedDeliveryData, Set<OrderItem> items) {
@@ -43,6 +46,24 @@ public class Order {
         this.setShippingCost(shippingCost);
         this.setExpectedDeliveryData(expectedDeliveryData);
         this.setItems(items);
+    }
+
+    public static Order draft(CustomerId customerId) {
+        return new Order(
+                new OrderId(),
+                customerId,
+                Money.ZERO,
+                Quantity.ZERO,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                new HashSet<>()
+        );
     }
 
     public OrderId id() {
@@ -134,12 +155,10 @@ public class Order {
     }
 
     private void setBilling(BillingInfo billing) {
-        Objects.requireNonNull(billing);
         this.billing = billing;
     }
 
     private void setPaymentMethod(PaymentMethod paymentMethod) {
-        Objects.requireNonNull(paymentMethod);
         this.paymentMethod = paymentMethod;
     }
 
