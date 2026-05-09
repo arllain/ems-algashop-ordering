@@ -2,9 +2,11 @@ package com.arllain.algashop.ordering.domain.entity;
 
 import com.arllain.algashop.ordering.domain.valueobject.BillingInfo;
 import com.arllain.algashop.ordering.domain.valueobject.Money;
+import com.arllain.algashop.ordering.domain.valueobject.ProductName;
 import com.arllain.algashop.ordering.domain.valueobject.Quantity;
 import com.arllain.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.arllain.algashop.ordering.domain.valueobject.id.OrderId;
+import com.arllain.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -64,6 +66,22 @@ public class Order {
                 null,
                 new HashSet<>()
         );
+    }
+
+    public void addItem(ProductId productId, ProductName productName, Money price,
+                        Quantity quantity) {
+        OrderItem orderItem = OrderItem.brandNew()
+                .orderId(this.id())
+                .price(price)
+                .quantity(quantity)
+                .productName(productName)
+                .productId(productId).
+                build();
+
+        if(this.items == null) {
+            this.items = new HashSet<>();
+        }
+        this.items.add(orderItem);
     }
 
     public OrderId id() {
