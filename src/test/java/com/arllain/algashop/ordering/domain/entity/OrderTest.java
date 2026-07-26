@@ -1,5 +1,6 @@
 package com.arllain.algashop.ordering.domain.entity;
 
+import com.arllain.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.arllain.algashop.ordering.domain.valueobject.Money;
 import com.arllain.algashop.ordering.domain.valueobject.ProductName;
 import com.arllain.algashop.ordering.domain.valueobject.Quantity;
@@ -83,4 +84,17 @@ class OrderTest {
         Assertions.assertThat(order.totalItems()).isEqualTo(new Quantity(3));
     }
 
+    @Test
+    public void givenDraftOrder_whenPlace_shouldChageToPlaced() {
+        Order order = Order.draft(new CustomerId());
+        order.place();
+        Assertions.assertThat(order.isPlaced()).isTrue();
+    }
+
+    @Test
+    public void givenDraftOrder_whenTryToPlace_shouldGenerateException() {
+        Order order = Order.draft(new CustomerId());
+        order.place();
+        Assertions.assertThatExceptionOfType(OrderStatusCannotBeChangedException.class).isThrownBy(order::place);
+    }
 }

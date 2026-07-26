@@ -1,5 +1,6 @@
 package com.arllain.algashop.ordering.domain.entity;
 
+import com.arllain.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.arllain.algashop.ordering.domain.valueobject.BillingInfo;
 import com.arllain.algashop.ordering.domain.valueobject.Money;
 import com.arllain.algashop.ordering.domain.valueobject.ProductName;
@@ -28,6 +29,7 @@ public class Order {
     private OffsetDateTime canceledAt;
     private OffsetDateTime readyAt;
     private BillingInfo billing;
+    private OrderStatus status;
     private PaymentMethod paymentMethod;
     private Money shippingCost;
     private LocalDate expectedDeliveryData;
@@ -35,7 +37,7 @@ public class Order {
 
     @Builder(builderClassName = "ExistingOrderBuielder", builderMethodName = "existing")
     public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
-                 OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingInfo billing,
+                 OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingInfo billing, OrderStatus status,
                  PaymentMethod paymentMethod, Money shippingCost, LocalDate expectedDeliveryData, Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
@@ -46,6 +48,7 @@ public class Order {
         this.setCanceledAt(canceledAt);
         this.setReadyAt(readyAt);
         this.setBilling(billing);
+        this.setStatus(status);
         this.setPaymentMethod(paymentMethod);
         this.setShippingCost(shippingCost);
         this.setExpectedDeliveryData(expectedDeliveryData);
@@ -63,6 +66,7 @@ public class Order {
                 null,
                 null,
                 null,
+                OrderStatus.DRAFT,
                 null,
                 null,
                 null,
@@ -86,6 +90,27 @@ public class Order {
         this.items.add(orderItem);
 
         this.recalculateTotals();
+    }
+
+    public void place() {
+        //TODO Business rules!
+        this.changeStatus(OrderStatus.PLACED);
+    }
+
+    private void changeStatus(OrderStatus newStatus) {
+        Objects.requireNonNull(newStatus);
+        if (this.status().canNotChangeTo(newStatus)) {
+            throw new OrderStatusCannotBeChangedException(this.id(), this.status(), newStatus);
+        }
+        this.setStatus(newStatus);
+    }
+
+    public boolean isDraft() {
+        return OrderStatus.DRAFT.equals(this.status());
+    }
+
+    public boolean isPlaced() {
+        return OrderStatus.PLACED.equals(this.status());
     }
 
     public OrderId id() {
@@ -136,6 +161,10 @@ public class Order {
         return expectedDeliveryData;
     }
 
+    public OrderStatus status() {
+        return status;
+    }
+
     public Set<OrderItem> items() {
         return Collections.unmodifiableSet(this.items);
     }
@@ -178,6 +207,11 @@ public class Order {
 
     private void setBilling(BillingInfo billing) {
         this.billing = billing;
+    }
+
+    private void setStatus(OrderStatus status) {
+        Objects.requireNonNull(status);
+        this.status = status;
     }
 
     private void setPaymentMethod(PaymentMethod paymentMethod) {
