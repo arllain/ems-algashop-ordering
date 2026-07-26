@@ -9,6 +9,7 @@ import com.arllain.algashop.ordering.domain.valueobject.id.OrderId;
 import com.arllain.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -83,6 +84,8 @@ public class Order {
             this.items = new HashSet<>();
         }
         this.items.add(orderItem);
+
+        this.recalculateTotals();
     }
 
     public OrderId id() {
@@ -204,5 +207,26 @@ public class Order {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    private void recalculateTotals(){
+        BigDecimal totalItemsAmount = this.items().stream().map(i -> i.totalAmount().value())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Integer totalItemsQuantity = this.items().stream().map(i -> i.quantity().value())
+                .reduce(0, Integer::sum);
+
+        BigDecimal shippingCostRecalculated;
+        if(this.shippingCost == null){
+            shippingCostRecalculated = BigDecimal.ZERO;
+        }else {
+            shippingCostRecalculated = this.shippingCost.value();
+        }
+
+        BigDecimal totalAmountRecalculated = totalItemsAmount.add(shippingCostRecalculated);
+
+        this.setTotalAmount(new Money(totalAmountRecalculated));
+        this.setTotalItems(new Quantity(totalItemsQuantity));
+
     }
 }
